@@ -16,7 +16,8 @@ export class AppointmentSlotsComponent implements OnInit {
   startTimeIndex: number;
   endTimeIndex: number;
 
-  slot = [];
+  slot:any = [];
+  idField = 1;
 
   constructor( private fb: FormBuilder) { }
 
@@ -45,8 +46,13 @@ export class AppointmentSlotsComponent implements OnInit {
     
   }
   addItem(){
+    let formObject = this.form.value;
+    formObject.id = this.idField;
+
+    this.slot = <FormGroup>this.form.controls["form"];
+    this.slot.push(this.form);
+    console.log(formObject);
     
-     this.slot.push(this.form);
   }
   removeItem(){}
 }
