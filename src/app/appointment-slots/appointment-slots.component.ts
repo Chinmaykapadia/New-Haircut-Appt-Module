@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-appointment-slots',
@@ -9,50 +9,68 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class AppointmentSlotsComponent implements OnInit {
 
   form: FormGroup;
-  slotTimeArray: any = []; // time array
-  minutesInterval: number = 1; //minutes interval
-  startTime: number = 9; // start time
-
-  startTimeIndex: number;
-  endTimeIndex: number;
-
+  @Input() slotTimeArray: any = []; // time array
+  slotEndTimeArray: any = [];
   slot:any = [];
   idField = 1;
 
+  selectedOptionIndex;
+  selectedStartTime;
+  selectedEndTime;
+
+  valueChange: any;
+
   constructor( private fb: FormBuilder) { }
 
+  
   ngOnInit() {
     this.form = this.fb.group({
-      start: [''],
-      end: ['']
+      controlsArray: this.fb.array([this.getFormGroup()]),
+      // controlsArray: this.fb.array([
+      //   this.fb.group({
+      //     start: [''],
+      //     end: ['']
+      //   })
+      // ])
     });
 
-    for (var i = 0; this.startTime < 24 * 60; i++) {
-      var hours = Math.floor(this.startTime / 60);
-      var minutes = this.startTime % 60;
-      this.slotTimeArray[i] = ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2);
-      this.startTime = this.startTime + this.minutesInterval;
-    }
-
-    this.startTimeIndex = this.slotTimeArray.indexOf("09:00");
-    this.endTimeIndex = this.slotTimeArray.indexOf("23:00");
-
-    this.slotTimeArray.splice(0,this.startTimeIndex);
-    this.slotTimeArray.splice(this.endTimeIndex);
-    // console.log("Before:-",removeBeforeStartTime);
-    // console.log("After:-",removeAfterEndTime);
+    this.valueChange = this.form.valueChanges.subscribe(val=>{
+      console.log(val);
+        
+    });
+    console.log("Changed Value:-",this.valueChange);
     
-  
-    
+    this.slotEndTimeArray = this.slotTimeArray;
   }
+
+  private getFormGroup() {
+    return this.fb.group({
+      start: [""],
+      end: [""],
+    });
+  }
+
   addItem(){
     let formObject = this.form.value;
     formObject.id = this.idField;
 
-    this.slot = <FormGroup>this.form.controls["form"];
-    this.slot.push(this.form);
-    console.log(formObject);
-    
+    this.slot = <FormArray>this.form.controls["controlsArray"];
+    this.slot.push(this.getFormGroup());
+    console.log("Slot Array:--",this.slot);
+
   }
   removeItem(){}
+
+  onSelectTime($event){
+    let indexAfterAdd;
+
+    this.selectedStartTime = $event.target.value;
+    console.log("Selected Start Time:-",this.selectedStartTime);
+
+    indexAfterAdd = this.slotTimeArray.indexOf(this.selectedStartTime) + 30;
+    
+    this.selectedEndTime = this.slotTimeArray[indexAfterAdd];
+      
+    
+  }
 }

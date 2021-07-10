@@ -2,24 +2,30 @@
 <h5> Select Slot </h5>
 <div>
     <form [formGroup]="form">
-        
-        <div class="selectTime">
-
-            <i class="fas fa-plus-square" (click)="addItem()" style="margin-right: 5px"></i>
-
-            <label> Start Time: </label>
-            <select class="startTime" formControlName="start">
-                <option> Select Time </option>
-                <option *ngFor="let item of slotTimeArray"> {{ item }} </option>
-            </select>
-
-            <label> End Time: </label>
-            <select class="endTime" formControlName="end">
-                <option> Select Time </option>
-                <option *ngFor="let item of slotTimeArray"> {{ item }} </option>
-            </select>
-
-            <i class="fas fa-minus-square" style="margin-left: 10px" (click)="removeItem()"></i>
+        <div formArrayName="controlsArray">
+            <div *ngFor="let item of form.get('controlsArray')['controls']; let i = index">
+                <div [formGroupName]="i">
+  
+                    <div class="selectTime">
+                        
+                        <i class="fas fa-plus-square" (click)="addItem()" style="margin-right: 5px"></i>
+                        
+                        <label> Start Time: </label>
+                        <select class="startTime" formControlName="start" (change)="onSelectTime($event)">
+                            <option> Select Time </option>
+                            <option *ngFor="let item of slotTimeArray"> {{ item }} </option>
+                        </select>
+                        
+                        <label> End Time: </label>
+                        <select class="endTime" formControlName="end" >
+                            <option> Select Time </option>
+                            <option *ngFor="let item of slotTimeArray"> {{ item }} </option>
+                        </select>
+                        
+                        <i class="fas fa-minus-square" style="margin-left: 10px" (click)="removeItem()"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 </div>
