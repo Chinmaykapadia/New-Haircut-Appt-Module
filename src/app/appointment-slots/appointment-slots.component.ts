@@ -50,26 +50,46 @@ export class AppointmentSlotsComponent implements OnInit {
     });
   }
 
-  addItem(){
+  addItem(i: number){
     let formObject = this.form.value;
+
+    let formObjectIndex ;
     formObject.id = this.idField;
 
     this.slot = <FormArray>this.form.controls["controlsArray"];
     this.slot.push(this.getFormGroup());
+    console.log(this.slot.controls[i]);
     console.log("Slot Array:--",this.slot);
+    
+    formObjectIndex = this.slot.value[i].start;
+    
+
 
   }
   removeItem(){}
 
-  onSelectTime($event){
+  public get getFormArray(): FormArray{
+    return this.form.get('controlsArray') as FormArray;
+  }
+
+  
+
+  onSelectTime($event, i: number){
     let indexAfterAdd;
+    let controlsIndex;
 
     this.selectedStartTime = $event.target.value;
+
+    controlsIndex = this.getFormArray.at(i).get('start');
+    console.log("Controls Index:",controlsIndex);
+    
+
     console.log("Selected Start Time:-",this.selectedStartTime);
 
     indexAfterAdd = this.slotTimeArray.indexOf(this.selectedStartTime) + 30;
     
-    this.selectedEndTime = this.slotTimeArray[indexAfterAdd];
+    //this.selectedEndTime = this.slotTimeArray[indexAfterAdd];
+    this.selectedEndTime = this.getFormArray.at(i).patchValue({ end: this.slotTimeArray[indexAfterAdd] });
       
     
   }

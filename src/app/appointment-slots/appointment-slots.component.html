@@ -8,16 +8,16 @@
   
                     <div class="selectTime">
                         
-                        <i class="fas fa-plus-square" (click)="addItem()" style="margin-right: 5px"></i>
+                        <i class="fas fa-plus-square" (click)="addItem(i)" style="margin-right: 5px"></i>
                         
                         <label> Start Time: </label>
-                        <select class="startTime" formControlName="start" (change)="onSelectTime($event)">
+                        <select class="startTime" formControlName="start" (change)="onSelectTime($event,i)">
                             <option> Select Time </option>
                             <option *ngFor="let item of slotTimeArray"> {{ item }} </option>
                         </select>
                         
                         <label> End Time: </label>
-                        <select class="endTime" formControlName="end" >
+                        <select class="endTime" formControlName="end" [value]="selectedEndTime" >
                             <option> Select Time </option>
                             <option *ngFor="let item of slotTimeArray"> {{ item }} </option>
                         </select>

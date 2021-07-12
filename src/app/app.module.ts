@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { DaysComponent } from './days/days.component';
 import { AppointmentSlotsComponent } from './appointment-slots/appointment-slots.component';
+import { AppointmentComponent } from './appointment/appointment.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     DaysComponent,
-    AppointmentSlotsComponent
+    AppointmentSlotsComponent,
+    AppointmentComponent
   ],
   imports: [
     BrowserModule,
