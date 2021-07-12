@@ -13,6 +13,8 @@ export class HomeComponent implements OnInit {
 
   startTimeIndex: number;
   endTimeIndex: number;
+
+  selectedDay: string;
   constructor() { }
 
   ngOnInit() {
@@ -31,6 +33,11 @@ export class HomeComponent implements OnInit {
      this.slotTimeArray.splice(this.endTimeIndex);
 
      //this.slotEndTimeArray = this.slotTimeArray;
-  }
-
+     
+    }
+  
+    receiveName($event){
+      this.selectedDay = $event.day;
+      console.log($event.day);
+    }
 }

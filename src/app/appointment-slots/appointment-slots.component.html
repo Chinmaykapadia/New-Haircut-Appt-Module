@@ -1,14 +1,15 @@
+<!-- <button class="btn btn-primary"> Download </button> -->
 <div class="vertical"> </div>
 <h5> Select Slot </h5>
-<div>
+<div class="slots">
     <form [formGroup]="form">
         <div formArrayName="controlsArray">
+            <!-- <i class="fas fa-plus-square" (click)="addItem1()" style="margin-right: 5px"></i> -->
             <div *ngFor="let item of form.get('controlsArray')['controls']; let i = index">
                 <div [formGroupName]="i">
-  
                     <div class="selectTime">
                         
-                        <i class="fas fa-plus-square" (click)="addItem(i)" style="margin-right: 5px"></i>
+                        <i class="fas fa-plus-square" *ngIf="enableAddButton" (click)="addItem(i)" style="margin-right: 5px"></i>
                         
                         <label> Start Time: </label>
                         <select class="startTime" formControlName="start" (change)="onSelectTime($event,i)">
@@ -17,15 +18,18 @@
                         </select>
                         
                         <label> End Time: </label>
-                        <select class="endTime" formControlName="end" [value]="selectedEndTime" >
+                        <select class="endTime" formControlName="end" >
                             <option> Select Time </option>
                             <option *ngFor="let item of slotTimeArray"> {{ item }} </option>
                         </select>
                         
-                        <i class="fas fa-minus-square" style="margin-left: 10px" (click)="removeItem()"></i>
+                        <i class="fas fa-minus-square" style="margin-left: 10px" (click)="removeItem(i)"></i>
                     </div>
                 </div>
             </div>
         </div>
     </form>
+</div>
+<div class="Download">
+    <button class="btn btn-primary"> Download </button>
 </div>

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,10 @@ export class CommonServiceService {
 
   startTimeIndex: number;
   endTimeIndex: number;
+
+  private day = new Subject<any>();
+  day$ = this.day.asObservable();
+
   constructor() { }
 
   generateTimeArr(){
@@ -27,5 +32,9 @@ export class CommonServiceService {
 
      this.slotTimeArray.splice(0,this.startTimeIndex);
      this.slotTimeArray.splice(this.endTimeIndex);
+  }
+
+  sendSelectedDay(data){
+    this.day.next(data);
   }
 }
