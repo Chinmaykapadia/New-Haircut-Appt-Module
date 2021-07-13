@@ -10,11 +10,10 @@ export class AppointmentSlotsComponent implements OnInit {
 
   form: FormGroup;
   @Input() slotTimeArray: any = []; // time array
-  @Input() day;
+  //@Input() day;
   //slotTimeArray;
-  slotEndTimeArray: any = [];
+  //slotEndTimeArray: any = [];
   slot:any = [];
-  idField = 1;
 
   selectedOptionIndex;
   selectedStartTime;
@@ -24,14 +23,20 @@ export class AppointmentSlotsComponent implements OnInit {
   valueChange: any;
 
   slotArray = [];
+  currentDay: string;
+  displayData = [];
+  enableAppointments: boolean;
+  enableAddBetweenAppt: boolean;
+
+  index: any;
 
   constructor( private fb: FormBuilder, private service: CommonServiceService) { }
   
   ngOnInit() {
-
+    this.enableAppointments = false;
+    this.enableAddBetweenAppt = false;
     this.service.day$.subscribe((data)=>{
-      //let clearFormArray = <FormArray>this.form.controls["controlsArray"];
-      //clearFormArray.clear();
+      this.currentDay = data;
       console.log(data.day);
       
     });
@@ -46,7 +51,7 @@ export class AppointmentSlotsComponent implements OnInit {
     });
     console.log("Changed Value:-",this.valueChange);
     
-    this.slotEndTimeArray = this.slotTimeArray;
+    //this.slotEndTimeArray = this.slotTimeArray;
 
   }
 
@@ -76,9 +81,13 @@ export class AppointmentSlotsComponent implements OnInit {
     console.log(indexAfterAdd);
     
     //this.selectedEndTime = this.slotTimeArray[indexAfterAdd];
-    this.slotArray.push({start: this.selectedStartTime, end: this.slotTimeArray[indexAfterAdd]})
-    this.getFormArray.patchValue(this.slotArray);
-
+    
+      this.slotArray.splice(i,1);       //It will allow to set the select/change value of last slot
+      this.slotArray.push({start: this.selectedStartTime, end: this.slotTimeArray[indexAfterAdd]})
+      this.getFormArray.patchValue(this.slotArray);
+      
+      console.log("ahlfhas:",this.getFormArray);
+ 
     this.enableAddButton = true;
   }
 
@@ -108,7 +117,7 @@ export class AppointmentSlotsComponent implements OnInit {
     this.slotArray.push({ start: this.slotTimeArray[indexOfStartTimeAfterAdd], end: this.slotTimeArray[indexOfStartTimeAfterAdd+30] });
     setTimeout(() => {
       this.getFormArray.setValue(this.slotArray);
-    }, 100);
+    }, 200);
     console.log("Form Array Value:---",this.form.get('controlsArray'));
     
 
@@ -118,10 +127,75 @@ export class AppointmentSlotsComponent implements OnInit {
      
   }
   
-  removeItem(index: number){
-    const control = <FormArray>this.form.controls["controlsArray"];
-    control.removeAt(index);
-    console.log(control);
+  removeItem(index){
+
+    console.log(this.slot[index]);
+
+    this.index = index;
+    this.slot.removeAt(index);       // Removes control from array.
+    this.slotArray.splice(index, 1); // Remove value of that control from arrary.
+
+    //if(this.index < this.slotArray.length){
+      this.enableAddBetweenAppt = true;
+    //}
+    
+  }
+
+  addItemBetween(){
+    // let prevIndexEndData;
+    // let nextIndexStartData;
+
+    let indexPrevEnd;
+    let indexNextStart;
+    let indexNextEnd;
+
+    this.slot.insert(this.index,this.getFormGroup());
+    // prevIndexEndData = this.slotArray[this.index - 1].end;
+    // nextIndexStartData = this.slotArray[this.index + 1].start;
+    console.log(this.index);
+    
+    indexPrevEnd = this.slotTimeArray.indexOf(this.slotArray[this.index - 1].end);  //Gives index of previous record's end time.
+    console.log("Prev Data End Index:--",indexPrevEnd);
+
+    indexNextStart = this.slotTimeArray.indexOf(this.slotArray[this.index].start); //Gives index of next record's start time.
+    console.log("Next Data Start Index:--",indexNextStart);
+
+    indexNextEnd = this.slotTimeArray.indexOf(this.slotArray[this.index].end);   //Gives index of next record's end time.
+
+    console.log("All Values:--",this.slotTimeArray[indexPrevEnd],this.slotTimeArray[indexNextStart],this.slotTimeArray[indexNextEnd]);
+    
+    
+    console.log(this.slotTimeArray.indexOf(this.slotTimeArray[indexNextStart]));
+    console.log(this.slotTimeArray.indexOf(this.slotTimeArray[indexNextEnd]));
+    
+    if((indexNextStart - indexPrevEnd) >= 60){
+      //this.slot.insert(this.index,this.getFormGroup());
+
+      console.log("Start:--",this.slotTimeArray[this.slotTimeArray.indexOf(indexNextStart)]);
+      //console.log("End:--",this.slotTimeArray[this.slotTimeArray.indexOf(indexNext)]);
+  
+      this.slotArray.splice(this.index,0,{ start: this.slotTimeArray[indexNextStart - 45], end: this.slotTimeArray[indexNextStart - 15] });
+      
+      console.log(this.slotArray);
+      
+      setTimeout(() => {
+        this.getFormArray.setValue(this.slotArray);
+      }, 200);
+      console.log(this.slotArray[this.index]);
+      console.log(this.index);
+
+      if((indexNextStart - indexPrevEnd) == 60){
+        this.enableAddBetweenAppt = false;
+        
+      }
+      
+    }
+  }
+
+  download(){
+    this.currentDay;
+    this.enableAppointments = true;
+    //this.displayData.push( this.slot );
   }
   
 }
