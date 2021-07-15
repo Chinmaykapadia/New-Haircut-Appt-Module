@@ -29,7 +29,9 @@ export class AppointmentSlotsComponent implements OnInit {
 
   index: any;
   removeElementCnt: number = 0;
-  removedIndexValue: any = [];
+  removedIndexValue: number[] = [];
+  removedId: any = [];
+  removedData: any = [];
 
   constructor( private fb: FormBuilder, private service: CommonServiceService) { }
   
@@ -53,18 +55,17 @@ export class AppointmentSlotsComponent implements OnInit {
     console.log("Changed Value:-",this.valueChange);
     
     //this.slotEndTimeArray = this.slotTimeArray;
-
   }
 
   private getFormGroup() {
     return this.fb.group({
       start: [""],
       end: [""],
+      id: []
     });
   }
 
   public get getFormArray(): FormArray{
-    this.form.get('controlsArray').value['id'] = this.idField;
     return this.form.get('controlsArray') as FormArray;
   }
 
@@ -86,71 +87,61 @@ export class AppointmentSlotsComponent implements OnInit {
 
     //this.slotArray.splice(i,1);      //It will allow to set the select/change value of last slot
     
-    this.slotArray.push({start: this.selectedStartTime, end: this.slotTimeArray[indexAfterAdd]});
-
+    this.slotArray.push({ start: this.selectedStartTime, end: this.slotTimeArray[indexAfterAdd], id: this.idField++ });
+    
     //this.slotArray.splice(i,0,{start: this.selectedStartTime, end: this.slotTimeArray[indexAfterAdd]});       //It will allow to set the select/change value of last slot
     this.getFormArray.patchValue(this.slotArray);
-    
+    // setTimeout(() => {
+    //   this.form.value.controlsArray.map(res=>{
+    //     res.id = this.idField;
+    //   });
+    //   console.log(this.form);
+      
+    // }, 100);
     console.log(this.slotArray);
     
     console.log("ahlfhas:",this.getFormArray);
+    console.log(this.form.value);
+    
  
     this.enableAddButton = true;
   }
 
-  // addIdField(id){
-  //   return this.fb.group({ id: new FormControl(id)})
-  // }
-
-  // idList:   {
-  //   idF: {
-  //     id: number,
-  //   }
-  // }
-
   addItem(i){
     
      let formObject = this.form.value;
-    // let formObjectIndex ;
-
-    let indexOfStartTimeAfterAdd: number;         //storing selected start time index.
-
+    // console.log(formObject);
+    // let formObjectIndex 
+    let indexOfStartTimeAfterAdd: number;         //storing selected start time index
     //let indexAfterAdd;
 
-
-
     this.slot = <FormArray>this.form.controls["controlsArray"];
-    this.slot.controls['id'] = this.idField;
-    //this.form.value['controlsArray'].id = this.idField;
+   
     this.slot.push(this.getFormGroup());
     console.log(this.slot);
-    
     console.log(this.selectedStartTime);
 
-    // if(this.removeElementCnt > 1){
-    //   console.log();
-      
-    //   this.selectedStartTime = this.slotTimeArray[this.slotTimeArray.indexOf(this.slotArray[this.slotArray.length - 1].start) + 45];
-    //   console.log(this.selectedStartTime);
-      
-    // }else{
-      this.selectedStartTime = this.slotTimeArray[this.slotTimeArray.indexOf(this.selectedStartTime) + 45]; //Setting start time.
-    //}
-    
-    console.log(this.selectedStartTime);
-    
-    //this.slot.patchValue({ start: this.slotTimeArray[indexOfStartTimeAfterAdd], end: this.slotTimeArray[indexOfStartTimeAfterAdd + 30] });
+    this.selectedStartTime = this.slotTimeArray[this.slotTimeArray.indexOf(this.selectedStartTime) + 45]; //Setting start time.
     
     indexOfStartTimeAfterAdd = this.slotTimeArray.indexOf(this.selectedStartTime); //storing selected start time index.
     console.log(indexOfStartTimeAfterAdd);
     console.log(this.slotTimeArray[indexOfStartTimeAfterAdd]);
 
+    //this.idField++;
+
     //pushing into array and then patching it to control:---
-    this.idField +=1;
-    this.slotArray.push({ start: this.slotTimeArray[indexOfStartTimeAfterAdd], end: this.slotTimeArray[indexOfStartTimeAfterAdd+30] });
-    setTimeout(() => {
-      this.getFormArray.setValue(this.slotArray);
-    }, 200);
+    this.slotArray.push({ start: this.slotTimeArray[indexOfStartTimeAfterAdd], end: this.slotTimeArray[indexOfStartTimeAfterAdd+30], id: this.idField++ });
+     setTimeout(() => {
+      this.getFormArray.patchValue(this.slotArray);
+    //   this.form.value.controlsArray.map(res=>{
+    //     res.id = this.idField++;
+    //   });
+    //   console.log(formObject);
+     }, 200);
+    
+    // this.idField+=1;
+    
+
     console.log("Form Array Value:---",this.form.get('controlsArray'));
     
 
@@ -168,22 +159,37 @@ export class AppointmentSlotsComponent implements OnInit {
     console.log(this.slot[index]);
 
     this.index = index;
-    this.slot.removeAt(index);       // Removes control from array.
-    this.removedIndexValue.push(index);
-    this.slotArray.splice(index, 1); // Remove value of that control from arrary.
+
+    console.log(index);
+    
+    this.slot.removeAt(index);          // Removes control from array.
+    this.removedIndexValue.push(index); // Array storing index of removed value.
+
+    this.removedId.push(this.slotArray[index].id); //Store removed values id.
+
+    this.removedData.push(this.slotArray[index]);
+    console.log("Removed Data:--",this.removedData);
+    
+    //console.log(this.removedId.push(this.slotArray[index].id));
+    
+    this.slotArray.splice(index, 1);    // Remove value of that control from arrary.
+
+    
+    console.log(this.slotArray);
+    
     console.log("Removed Index Array:--",this.removedIndexValue);
       
     //this.removeElementCnt += 1;
-    console.log("Counter of removed element:-",this.removeElementCnt);
+    // console.log("Counter of removed element:-",this.removeElementCnt);
 
-    indexNextStart = this.slotTimeArray.indexOf(this.slotArray[this.index].start); //Gives index of next slot/record's start time.
-    console.log("Next Data Start Index:--",indexNextStart);
+    // indexNextStart = this.slotTimeArray.indexOf(this.slotArray[this.index].start); //Gives index of next slot/record's start time.
+    // console.log("Next Data Start Index:--",indexNextStart);
     
 
-    indexNextEnd = this.slotTimeArray.indexOf(this.slotArray[this.index].end);   //Gives index of next slot/record's end time.
-    console.log("Next Data Start Index:--",indexNextEnd);
+    // indexNextEnd = this.slotTimeArray.indexOf(this.slotArray[this.index].end);   //Gives index of next slot/record's end time.
+    // console.log("Next Data Start Index:--",indexNextEnd);
 
-    console.log("All Values:--",this.slotTimeArray[indexNextStart],this.slotTimeArray[indexNextEnd]);
+    // console.log("All Values:--",this.slotTimeArray[indexNextStart],this.slotTimeArray[indexNextEnd]);
     //if(this.index < this.slotArray.length){
       this.enableAddBetweenAppt = true;
     //}
@@ -191,18 +197,25 @@ export class AppointmentSlotsComponent implements OnInit {
   }
 
   addItemBetween(ind){
-
-    console.log(ind);
+    let indx = ind;
+    console.log(indx);
     
+    console.log("Remove index value:-",this.removedIndexValue);
+    //console.log("id:-",this.removedData[indx].id);
+
     let indexPrevStart: number;
     let indexPrevEnd: number;
     let indexNextStart: number;
     let indexNextEnd: number;
 
     //ind = this.index;
+
+    
     console.log(this.index);
 
-    indexPrevStart = this.slotTimeArray.indexOf(this.slotArray[this.index -1].start);  //Gives index of previous slot/record's end time.
+
+
+    indexPrevStart = this.slotTimeArray.indexOf(this.slotArray[this.index - 1].start);  //Gives index of previous slot/record's end time.
     
     indexPrevEnd = this.slotTimeArray.indexOf(this.slotArray[this.index - 1].end);  //Gives index of previous slot/record's end time.
     console.log("Prev Data End Index:--",indexPrevEnd);
@@ -218,36 +231,45 @@ export class AppointmentSlotsComponent implements OnInit {
     console.log(this.slotTimeArray.indexOf(this.slotTimeArray[indexNextStart]));
     console.log(this.slotTimeArray.indexOf(this.slotTimeArray[indexNextEnd]));
 
-      this.slot.insert(ind,this.getFormGroup());
-      if((indexNextStart - indexPrevEnd) >= 60){
+    console.log(ind,this.index);
+    if((indexNextStart - indexPrevEnd) >= 60){
+      
+      if((indexNextStart - indexPrevEnd) == 60){
+          this.slot.insert(ind,this.getFormGroup());
+
+          console.log("Start:--",this.slotTimeArray[this.slotTimeArray.indexOf(indexNextStart)]);
+          
+          //this.slotArray[this.index] = { start: this.slotTimeArray[indexNextStart - 45], end: this.slotTimeArray[indexNextStart - 15] };
+          
+          let findEle = this.removedData.find(x=>x.id > this.slotArray[indx].id);
+          console.log(findEle);
+          
+          this.slotArray.splice(this.index, 0, { start: this.slotTimeArray[indexPrevStart + 45], end: this.slotTimeArray[indexPrevEnd + 15], id: this.removedId[ind] });
+          //this.slotArray.splice(indx+1, 0, findEle);
+          console.log(this.slotArray);
+          
+          setTimeout(() => {
+            this.getFormArray.patchValue(this.slotArray);
+          }, 200);
+      }else{
+          this.slot.insert(ind,this.getFormGroup());
+      }
         
-        console.log("Start:--",this.slotTimeArray[this.slotTimeArray.indexOf(indexNextStart)]);
-        
-        //this.slotArray[this.index] = { start: this.slotTimeArray[indexNextStart - 45], end: this.slotTimeArray[indexNextStart - 15] };
-        console.log(ind,this.index);
-        
-        this.slotArray.splice(this.index ,0,{ start: this.slotTimeArray[indexNextStart - 45], end: this.slotTimeArray[indexNextStart - 15] });
-        
-        console.log(this.slotArray);
-        
-        setTimeout(() => {
-          this.getFormArray.setValue(this.slotArray);
-        }, 200);
 
         
         console.log(this.slotArray[this.index]);
         console.log(this.index);
         
-        if((indexNextStart - indexPrevEnd) == 60){
+        //if((indexNextStart - indexPrevEnd) == 60){
           this.enableAddBetweenAppt = false;
-          
-        }
-        
+        //}
       }
+
       console.log(ind);
       
       this.removedIndexValue.splice(ind, 1);
-      console.log(this.removedIndexValue);
+      this.removedId.splice(ind,1);
+      console.log("Remove index value:-",this.removedIndexValue);
       console.log(this.index);
     //this.index += 1;
     console.log(this.slotArray[this.slotArray.length - 1]);
