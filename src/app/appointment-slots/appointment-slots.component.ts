@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges, AfterViewInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { CommonServiceService } from '../common-service.service';
 @Component({
   selector: 'app-appointment-slots',
@@ -64,7 +64,7 @@ export class AppointmentSlotsComponent implements OnInit {
   }
 
   public get getFormArray(): FormArray{
-    
+    this.form.get('controlsArray').value['id'] = this.idField;
     return this.form.get('controlsArray') as FormArray;
   }
 
@@ -98,18 +98,33 @@ export class AppointmentSlotsComponent implements OnInit {
     this.enableAddButton = true;
   }
 
+  // addIdField(id){
+  //   return this.fb.group({ id: new FormControl(id)})
+  // }
+
+  // idList:   {
+  //   idF: {
+  //     id: number,
+  //   }
+  // }
+
   addItem(i){
     
-    // let formObject = this.form.value;
+     let formObject = this.form.value;
     // let formObjectIndex ;
 
     let indexOfStartTimeAfterAdd: number;         //storing selected start time index.
 
     //let indexAfterAdd;
 
+
+
     this.slot = <FormArray>this.form.controls["controlsArray"];
+    this.slot.controls['id'] = this.idField;
+    //this.form.value['controlsArray'].id = this.idField;
+    this.slot.push(this.getFormGroup());
+    console.log(this.slot);
     
-    this.slot.push(this.getFormGroup(),this.form.get('controlsArray')['id'] = this.idField);
     console.log(this.selectedStartTime);
 
     // if(this.removeElementCnt > 1){
