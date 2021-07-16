@@ -40,6 +40,7 @@ export class AppointmentSlotsComponent implements OnInit {
 
   prevIndEnd;
   nextIndStart;
+  addBtnIndex: number;
 
   cntDeleted: number;
 
@@ -96,10 +97,19 @@ export class AppointmentSlotsComponent implements OnInit {
 
     //this.slotArray.splice(i,1);      //It will allow to set the select/change value of last slot
 
-    this.slotArray.push({ start: this.selectedStartTime, end: this.slotTimeArray[indexAfterAdd], id: this.idField++, isDeleted: "false"});
+    //this.nextIndStart = this.slotTimeArray.indexOf(this.slotArray[this.addBtnIndex + 1].start);
+    //this.prevIndEnd = this.slotTimeArray.indexOf(this.slotArray[this.addBtnIndex - 1].end);
+
+    //if(this.nextIndStart - this.prevIndEnd >= 60){
+      //this.slotArray[i] = { start: this.selectedStartTime, end: this.slotTimeArray[indexAfterAdd], id: this.slotArray[i].id, isDeleted: "false" };
+    //}else{
+
+      this.slotArray.push({ start: this.selectedStartTime, end: this.slotTimeArray[indexAfterAdd], id: this.idField++, isDeleted: "false"});
+    //}
 
     //this.slotArray.splice(i,0,{start: this.selectedStartTime, end: this.slotTimeArray[indexAfterAdd]});       //It will allow to set the select/change value of last slot
     this.getFormArray.patchValue(this.slotArray);
+
 
     console.log(this.slotArray);
     console.log('ahlfhas:', this.getFormArray);
@@ -173,7 +183,13 @@ export class AppointmentSlotsComponent implements OnInit {
     // });
 
     //this.slot.removeAt(index); // Removes control from array.
-    this.removedIndexValue.push(index); // Array storing index of removed value.
+    // this.removedIndexValue.push(index); // Array storing index of removed value.
+
+    // this.slotArray.forEach(element=>{
+    //   if(element.isDeleted == "true"){
+      
+    //   }
+    // })
 
     this.removedIndexValue.forEach(element => {
       if(element+1 == index){
@@ -183,10 +199,10 @@ export class AppointmentSlotsComponent implements OnInit {
           this.slot.removeAt(element+1);
         }, 200);
       }
-      if(element-1 == index){
+      else if(element-1 == index){
         console.log("No");
         setTimeout(() => {
-          this.slot.removeAt(element+1);
+          this.slot.removeAt(element-1);
         }, 200);
       }
       //console.log();
@@ -245,6 +261,8 @@ export class AppointmentSlotsComponent implements OnInit {
     let indx = ind;
     console.log(indx);
 
+    this.addBtnIndex = ind;
+
     console.log('Remove index value:-', this.removedIndexValue);
     //console.log("id:-",this.removedData[indx].id);
 
@@ -296,12 +314,6 @@ export class AppointmentSlotsComponent implements OnInit {
           //this.slotArray.splice(indx+1, 1);
           this.getFormArray.at(indx).patchValue(this.slotArray[indx]);
         }, 200);
-      // } else {
-      //   //this.cntDeleted = 2;
-      //   if (indexNextStart - indexPrevEnd == 60) {
-      //     this.slot.insert(ind, this.getFormGroup());
-      //   }
-      //}
 
       console.log(this.slotArray[this.index]);
       console.log(this.index);
@@ -314,6 +326,7 @@ export class AppointmentSlotsComponent implements OnInit {
       this.slot.insert(indx,this.getFormGroup());
       //this.slotArray[indx] = { start: this.slotTimeArray[indexPrevStart + 45], end: this.slotTimeArray[indexPrevEnd + 45], id: this.slotArray[indx].id, isDeleted: "false" };
       this.slot.removeAt(indx+1);
+
       // setTimeout(() => {
       //   this.getFormArray.at(indx).patchValue(this.slotArray[indx]);
       // }, 200);
