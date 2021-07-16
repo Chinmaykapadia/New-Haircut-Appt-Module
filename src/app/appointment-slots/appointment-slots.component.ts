@@ -130,6 +130,7 @@ export class AppointmentSlotsComponent implements OnInit {
     //this.idField++;
 
     //pushing into array and then patching it to control:---
+    this.slotArray.sort((a,b)=>a.start.localeCompare(b.start));
     this.slotArray.push({ start: this.slotTimeArray[indexOfStartTimeAfterAdd], end: this.slotTimeArray[indexOfStartTimeAfterAdd+30], id: this.idField++ });
      setTimeout(() => {
       this.getFormArray.patchValue(this.slotArray);
@@ -244,13 +245,15 @@ export class AppointmentSlotsComponent implements OnInit {
           let findEle = this.removedData.find(x=>x.id > this.slotArray[indx].id);
           console.log(findEle);
           
-          this.slotArray.splice(this.index, 0, { start: this.slotTimeArray[indexPrevStart + 45], end: this.slotTimeArray[indexPrevEnd + 15], id: this.removedId[ind] });
+          this.slotArray.push({ start: this.slotTimeArray[indexPrevStart + 45], end: this.slotTimeArray[indexPrevEnd + 45], id: this.removedId[ind] });
+          //this.slotArray.splice(this.index, 0, { start: this.slotTimeArray[indexPrevStart + 45], end: this.slotTimeArray[indexPrevEnd + 45], id: this.removedId[ind] });
           //this.slotArray.splice(indx+1, 0, findEle);
           console.log(this.slotArray);
           
           setTimeout(() => {
             this.getFormArray.patchValue(this.slotArray);
           }, 200);
+          this.slotArray.sort((a,b)=>a.start.localeCompare(b.start));
       }else{
           this.slot.insert(ind,this.getFormGroup());
       }
