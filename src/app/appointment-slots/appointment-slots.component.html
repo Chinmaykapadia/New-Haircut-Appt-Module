@@ -1,50 +1,72 @@
 <!-- <button class="btn btn-primary"> Download </button> -->
-<div class="vertical"> </div>
-<h5> Select Slot </h5>
+<div class="vertical"></div>
+<h5>Select Slot</h5>
 <div class="slots">
-    <form [formGroup]="form">
-        <div formArrayName="controlsArray">
+  <form [formGroup]="form">
+    <div formArrayName="controlsArray">
+      <!-- <i class="fas fa-plus-square" *ngIf="enableAddBetweenAppt" (click)="addItemBetween()" style="margin-right: 5px"></i> -->
 
-            <!-- <i class="fas fa-plus-square" *ngIf="enableAddBetweenAppt" (click)="addItemBetween()" style="margin-right: 5px"></i> -->
-
-            <div *ngFor="let item of form.get('controlsArray')['controls']; let i = index">
-
-                <div [formGroupName]="i">
-                    <div class="selectTime">
-
-                        <ng-container *ngFor="let item1 of removedIndexValue; let ind = index">
-                            <ng-container *ngIf="i == item1 - 1" >
-                                <i class="fas fa-plus-square" (click)="addItemBetween(i)" style="margin-right: 5px"></i>
-                            </ng-container>
-                        </ng-container>
-                        
-                        <label> Start Time: </label>
-                        <select class="startTime" formControlName="start" (change)="onSelectTime($event,i)">
-                            <option> Select Time </option>
-                            <option *ngFor="let item of slotTimeArray"> {{ item }} </option>
-                        </select>
-
-                        <label> End Time: </label>
-                        <select class="endTime" formControlName="end" >
-                            <option> Select Time </option>
-                            <option *ngFor="let item of slotTimeArray"> {{ item }} </option>
-                        </select>
-                        
-                        <i class="fas fa-minus-square" style="margin-left: 10px" (click)="removeItem(i)"></i>
-                    </div>
-                </div>
+      <div
+        *ngFor="
+          let item of form.get('controlsArray')['controls'];
+          let i = index
+        "
+      >
+      {{ i }}
+        <div [formGroupName]="i">
+          <div class="selectTime">
+            <!-- <ng-container *ngFor="let item1 of slotTimeArray; let ind = index"> -->
+            <!-- <ng-container *ngIf="enableAddBetweenAppt"> -->
+            <!-- <ng-container *ngIf=" nextIndStart - prevIndEnd >= 60 "> -->
+            <!-- <ng-container *ngIf="showAddBtn(slotArray[index - 1]?.end, slotArray[index]?.start, i)"> -->
+            
+            <div *ngIf="item.value.isDeleted === 'true'; else elseblock">
+              <i class="fas fa-plus-square" (click)="addItemBetween(i)" style="margin-right: 5px"></i>
             </div>
-            <i class="fas fa-plus-square" *ngIf="enableAddButton" (click)="addItem()" style="margin-right: 5px">ADD</i>
+            <!-- </ng-container> -->
+            <!-- </ng-container> -->
+            <!-- </ng-container> -->
+            <!-- </ng-container> -->
+
+            <ng-template #elseblock>
+              <label> Start Time: </label>
+              <select class="startTime" formControlName="start" (change)="onSelectTime($event, i)">
+                <option>Select Time</option>
+                <option *ngFor="let item of slotTimeArray">{{ item }}</option>
+              </select>
+
+              <label> End Time: </label>
+              <select class="endTime" formControlName="end">
+                <option>Select Time</option>
+                <option *ngFor="let item of slotTimeArray">{{ item }}</option>
+              </select>
+
+              <i
+                class="fas fa-minus-square"
+                style="margin-left: 10px"
+                (click)="removeItem(i)"
+              ></i>
+            </ng-template>
+          </div>
         </div>
-    </form>
+      </div>
+      <i
+        class="fas fa-plus-square"
+        *ngIf="enableAddButton"
+        (click)="addItem()"
+        style="margin-right: 5px"
+        >ADD</i
+      >
+    </div>
+  </form>
 </div>
 <div class="Download">
-    <button class="btn btn-primary" (click)="download()"> Download </button>
+  <button class="btn btn-primary" (click)="download()">Download</button>
 </div>
 <div class="display" *ngIf="enableAppointments">
-    <h3> Display Appointments </h3>
-    {{ currentDay }}
-    <div *ngFor="let item of slotArray">
-         {{ item | json}}
-    </div>
+  <h3>Display Appointments</h3>
+  {{ currentDay }}
+  <div *ngFor="let item of slotArray">
+    {{ item | json }}
+  </div>
 </div>
