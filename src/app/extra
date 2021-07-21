@@ -1,0 +1,90 @@
+addItemBetween(ind) {
+    let indx = ind;
+    console.log(indx);
+
+    this.addBtnIndex = ind;
+
+    console.log('Remove index value:-', this.removedIndexValue);
+    //console.log("id:-",this.removedData[indx].id);
+
+    let indexPrevStart: number;
+    let indexPrevEnd: number;
+    let indexNextStart: number;
+    let indexNextEnd: number;
+
+    //ind = this.index;
+
+    console.log(this.index);
+
+    indexPrevStart = this.slotTimeArray.indexOf(this.slotArray[indx - 1].start); //Gives index of previous slot/record's end time.
+
+    indexPrevEnd = this.slotTimeArray.indexOf(this.slotArray[indx - 1].end); //Gives index of previous slot/record's end time.
+    console.log('Prev Data End Index:--', indexPrevEnd);
+
+    indexNextStart = this.slotTimeArray.indexOf(this.slotArray[indx + 1].start); //Gives index of next slot/record's start time.
+    console.log('Next Data Start Index:--', indexNextStart);
+
+    indexNextEnd = this.slotTimeArray.indexOf(this.slotArray[indx + 1].end); //Gives index of next slot/record's end time.
+
+    console.log('All Values:--',this.slotTimeArray[indexPrevEnd],this.slotTimeArray[indexNextStart],this.slotTimeArray[indexNextEnd]);
+
+    console.log(this.slotTimeArray.indexOf(this.slotTimeArray[indexNextStart]));
+    console.log(this.slotTimeArray.indexOf(this.slotTimeArray[indexNextEnd]));
+
+    console.log(ind, this.index);
+
+    this.nextIndStart = indexNextStart;  // Setting next start value for select after adding.
+    this.prevIndEnd = indexPrevEnd;     // Setting previoud end value for select after adding.
+
+    if (indexNextStart - indexPrevEnd == 60) {
+     // if (indexNextStart - indexPrevEnd == 60) {
+        this.slot.insert(indx, this.getFormGroup());
+        console.log('Start:--',this.slotTimeArray[this.slotTimeArray.indexOf(indexNextStart)]);
+        //this.slotArray.push({ start: this.slotTimeArray[indexPrevStart + 45], end: this.slotTimeArray[indexPrevEnd + 45], id: this.removedId[ind] });
+
+        this.slotArray[indx] = { start: this.slotTimeArray[indexPrevStart + 45], end: this.slotTimeArray[indexPrevEnd + 45], id: this.slotArray[indx].id, isDeleted: "false" };
+        this.slot.removeAt(indx+1);
+          //this.slotArray.slice(indx, this.slotArray[indx]);
+        //this.slotArray.splice(indx, 0, {start: this.slotTimeArray[indexPrevStart + 45],end: this.slotTimeArray[indexPrevEnd + 45], id: this.slotArray[indx].id, isDeleted: "false"});
+        console.log(this.slotArray);
+        console.log(this.getFormArray.at(indx));
+        
+        setTimeout(() => {
+          //this.getFormArray.at(indx).patchValue({ start: this.slotArray[indx].start, end: this.slotArray[indx].end });
+          //this.getFormArray.at(indx).patchValue({ start: this.slotTimeArray[indexPrevStart + 45], end: this.slotTimeArray[indexPrevEnd + 45], isDeleted: "false" });
+          //this.getFormArray.patchValue(this.slotArray);
+          this.getFormArray.at(indx).patchValue(this.slotArray[indx]);
+        }, 200);
+
+      console.log(this.slotArray[this.index]);
+      console.log(this.index);
+      //if((indexNextStart - indexPrevEnd) == 60){
+      this.enableAddBetweenAppt = false;
+      //}
+    }
+    else{
+      this.slot.insert(indx,this.getFormGroup());
+      this.slotArray[indx] = { start: this.slotTimeArray[indexPrevStart + 45], end: this.slotTimeArray[indexPrevEnd + 45], id: this.slotArray[indx].id, isDeleted: "false" };
+      console.log("next:", this.slotTimeArray.indexOf(this.slot.value[indx+2].start), "prev:", this.slotTimeArray.indexOf(this.slotArray[indx].end));
+      
+      //this.slot.removeAt(indx+1);
+      setTimeout(() => {
+        this.getFormArray.at(indx).patchValue(this.slotArray[indx]);
+        if((this.slotTimeArray.indexOf(this.slot.value[indx+2].start) - this.slotTimeArray.indexOf(this.slotArray[indx].end) < 60)){
+          setTimeout(() => {
+            this.slot.removeAt(indx+1);
+          }, 200);
+        }
+      }, 200);
+
+    }
+     
+    console.log(ind);
+
+    // this.removedIndexValue.splice(ind, 1);
+    // this.removedId.splice(ind, 1);
+    //console.log('Remove index value:-', this.removedIndexValue);
+    //console.log(this.index);
+    //this.index += 1;
+    //console.log(this.slotArray[this.slotArray.length - 1]);
+  }

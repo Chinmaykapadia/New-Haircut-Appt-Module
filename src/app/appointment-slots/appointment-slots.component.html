@@ -21,7 +21,7 @@
             <!-- <ng-container *ngIf="showAddBtn(slotArray[index - 1]?.end, slotArray[index]?.start, i)"> -->
             
             <div *ngIf="item.value.isDeleted === 'true'; else elseblock">
-              <i class="fas fa-plus-square" (click)="addItemBetween(i)" style="margin-right: 5px"></i>
+              <i class="fas fa-plus-square" (click)="addItem('',i)" style="margin-right: 5px"></i>
             </div>
             <!-- </ng-container> -->
             <!-- </ng-container> -->
@@ -53,7 +53,7 @@
       <i
         class="fas fa-plus-square"
         *ngIf="enableAddButton"
-        (click)="addItem()"
+        (click)="addItem('add')"
         style="margin-right: 5px"
         >ADD</i
       >
@@ -65,8 +65,8 @@
 </div>
 <div class="display" *ngIf="enableAppointments">
   <h3>Display Appointments</h3>
-  {{ currentDay }}
-  <div *ngFor="let item of slotArray">
+  {{ selectedDay }}:-
+  <div *ngFor="let item of slot.value">
     {{ item | json }}
   </div>
 </div>

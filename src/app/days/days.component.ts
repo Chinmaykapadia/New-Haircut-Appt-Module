@@ -8,7 +8,7 @@ import { CommonServiceService } from '../common-service.service';
 })
 export class DaysComponent implements OnInit {
 
-  //@Output() day = new EventEmitter();
+  @Output() day = new EventEmitter();
   days = [];
   activeDaySelection: number;
   constructor(private service: CommonServiceService) { }
@@ -22,7 +22,12 @@ export class DaysComponent implements OnInit {
 
     let emitData = { day: this.days[index]}
     this.activeDaySelection = index;
-    //this.day.emit(emitData);
-    this.service.sendSelectedDay(emitData);
+    this.day.emit(emitData);
+    //this.service.sendSelectedDay(emitData);
+  }
+
+  onChange($event){
+    console.log($event.target.value);
+    
   }
 }
